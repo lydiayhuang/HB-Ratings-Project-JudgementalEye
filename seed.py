@@ -42,7 +42,6 @@ def load_movies():
     # Delete all rows in table, so if we need to run this a second time,
     # we won't be trying to add duplicate movies
     Movie.query.delete()
-    movie_list = []
 
     # Read u.item file and insert data
     for row in open("seed_data/u.item"):
@@ -52,13 +51,14 @@ def load_movies():
 
         movie_id = movie_list[0]
         title = movie_list[1]
-        released_at = movie_list[2]
+        released_date = movie_list[2]
+        # print released_at
         imdb_url = movie_list[4]
-
-    if released_at:
-        released_at = datetime.datetime.strptime(released_at, "%d-%b-%Y")
-    else:
-        released_at = None
+        if released_date:
+            released_at = datetime.datetime.strptime(released_date, "%d-%b-%Y")
+        else:
+            released_at = None
+        # released_at.strftime('%d-%b-%Y')
 
         movie = Movie(movie_id=movie_id,
                       title=title,
