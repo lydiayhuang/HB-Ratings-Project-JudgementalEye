@@ -2,7 +2,7 @@
 {% block content %}
 
     <h2>Login Form</h2>
-    <form action="/login-form">
+    <form action="/login_form" method="post">
 
         <label><b>Email</b></label>
         <input type="email" placeholder="Enter Email" name="uemail" required>
@@ -11,6 +11,7 @@
         <input type="password" placeholder="Enter Password" name="psw" required>
 
         <button type="submit">Login</button>
+        
         <!-- <input type="checkbox" checked="checked"> Remember me -->
 
     </form>
