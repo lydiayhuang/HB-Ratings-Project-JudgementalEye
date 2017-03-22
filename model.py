@@ -42,7 +42,6 @@ class User(db.Model):
 # Put your Movie and Rating model classes here.
 class Movie(db.Model):
     """Movies of ratings website."""
-
     __tablename__ = "movies"
 
     movie_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
