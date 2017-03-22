@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h2>Please Register</h2>
+    <form action="/login-form">
+
+        <label><b>Email</b></label>
+        <input type="email" placeholder="Enter Email" name="uemail" required>
+
+        <label><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="psw" required>
+
+        <button type="submit">Register</button>
+        <!-- <input type="checkbox" checked="checked"> Remember me -->
+
+    </form>
+{% endblock %}
