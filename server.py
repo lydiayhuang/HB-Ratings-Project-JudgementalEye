@@ -42,14 +42,54 @@ def user_info(user_id):
     user = User.query.filter(User.user_id == user_id).one()
   
     age = user.age
+    print 'age\n\n\n\n\n', age
     zipcode = user.zipcode
+    print 'zipcode\n\n\n\n\n', zipcode
     scores = user.ratings
+    print "score:\n\n\n\n\n", scores
 
     return render_template("user_detail.html", 
                                     scores=scores,
                                     age=age,
                                     zipcode=zipcode
                                     )
+
+
+@app.route("/movies")
+def movie_list():
+    """Show list of movies."""
+
+    movies = Movie.query.all()
+    return render_template("movie_list.html", movies=movies)
+
+
+@app.route("/movie_rating")
+def add_new_rating():
+    """Add new rating to movies."""
+
+    movies = Movie.query.all()
+    return render_template("movie_list.html", movies=movies)
+
+
+
+
+
+@app.route("/movies/<movie_id>")
+def movie_details(movie_id):
+    """Show movie details."""
+
+    movie = Movie.query.filter(Movie.movie_id == movie_id).one()
+  
+    title = movie.title
+    scores = movie.ratings
+    
+
+    return render_template("movie_details.html", 
+                                    title=title,
+                                    scores=scores
+                                    )   
+
+
 
 
 @app.route("/register", methods=['GET'])
@@ -109,7 +149,7 @@ def process_form():
     else:
         session['logged_in'] = user.user_id
         flash('Log in successful!')
-        return render_template('user_detail.html')
+        return redirect('users/' + str(user.user_id))
 
 
 @app.route('/log_out')
@@ -119,6 +159,8 @@ def log_out():
     del session['logged_in']
     flash('You have been logged out.')
     return render_template('homepage.html')
+
+
 
 
 
