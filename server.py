@@ -26,12 +26,35 @@ def index():
     # a = jsonify([1,3])
     return render_template("homepage.html")
 
+
 @app.route("/users")
 def user_list():
     """Show list of users."""
 
+  
+
     users = User.query.all()
     return render_template("user_list.html", users=users)
+
+
+@app.route("/users/<user_id>")
+def user_info(user_id):
+    """Show list of users."""
+
+    user = User.query.filter(User.user_id == user_id).one()
+  
+    age = user.age
+    zipcode = user.zipcode
+    scores = user.ratings
+
+
+
+    
+    return render_template("user_detail.html", 
+                                    scores=scores,
+                                    age=age,
+                                    zipcode=zipcode
+                                    )
 
 
 @app.route("/register", methods=['GET'])
@@ -51,18 +74,18 @@ def register_user():
     user = User.query.filter(User.email == email).first()
 
     if not user:
-        new_user = User(email = email, password = password)
+        new_user = User(email=email, password=password)
         db.session.add(new_user)
         db.session.commit()
 
-        session['logged_in'] = new_user.user_id 
+        session['logged_in'] = new_user.user_id
         flash("New account successfully created.")
 
-        return render_template('homepage.html')
+        return render_template('user_detail.html')
     else:
-        flash("This email is in use, please pick a new one.")
+        flash("This email is in use. Already registered, please log in instead.")
 
-        return render_template('registration_form.html')
+        return render_template('login_form.html')
 
 
 @app.route("/login_form")
@@ -79,11 +102,11 @@ def process_form():
     email = request.form.get('uemail')
     password = request.form.get('psw')
 
-    user = User.query.filter_by(User.email == email).first()
+    user = User.query.filter(User.email == email).first()
 
     if not user:
-        flash('Email not recognized, please log in again.')
-        return render_template('login_form.html')
+        flash('Email not recognized, please register for a new account.')
+        return render_template('registration_form.html')
 
     elif user.password != password:
         flash('Password is wrong, please log in again')
@@ -91,6 +114,7 @@ def process_form():
     else:
         session['logged_in'] = user.user_id
         flash('Log in successful!')
+        return render_template('user_detail.html')
 
 
 @app.route('/log_out')
