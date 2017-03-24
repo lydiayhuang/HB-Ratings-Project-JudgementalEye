@@ -9,16 +9,26 @@
   <hr>
 
 
-{% with messages = get_flashed_messages() %}
-	{% if messages %}
-	<ul class=flashes>
-	{% for message in messages %}
-	  <li>{{ message }}</li>
-	{% endfor %}
-	</ul>
-	{% endif %}
-{% endwith %}
-
+  {% with messages = get_flashed_messages() %}
+  	{% if messages %}
+  	<ul class=flashes>
+  	{% for message in messages %}
+  	  <li>{{ message }}</li>
+  	{% endfor %}
+  	</ul>
+  	{% endif %}
+  {% endwith %}
+  {% block login %}
+    {% if 'logged_in' in session.keys() %}
+        <form method="get" action="/log_out">
+            <button type="submit">Logout</button>
+        </form>
+    {% else %}
+        <form method="get" action="/login_form">
+            <button type="submit">Login</button>
+        </form>
+    {% endif %}
+  {% endblock %}
   {% block content %} 
   	
   {% endblock %}

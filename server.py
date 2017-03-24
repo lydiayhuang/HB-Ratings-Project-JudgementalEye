@@ -40,13 +40,13 @@ def user_info(user_id):
     """Show user age, zipcode and ratings."""
 
     user = User.query.filter(User.user_id == user_id).one()
-  
+    
     age = user.age
-    print 'age\n\n\n\n\n', age
+    # print 'age\n\n\n\n\n', age
     zipcode = user.zipcode
-    print 'zipcode\n\n\n\n\n', zipcode
+    # print 'zipcode\n\n\n\n\n', zipcode
     scores = user.ratings
-    print "score:\n\n\n\n\n", scores
+    # print "score:\n\n\n\n\n", scores
 
     return render_template("user_detail.html", 
                                     scores=scores,
@@ -63,15 +63,27 @@ def movie_list():
     return render_template("movie_list.html", movies=movies)
 
 
-@app.route("/movie_rating")
+@app.route("/movie_rating", methods=['POST'])
 def add_new_rating():
     """Add new rating to movies."""
+    rating = request.form.get("rating")
+    movie_id = request.form.get("movie")
+    user_id = request.form.get("user")
 
-    movies = Movie.query.all()
-    return render_template("movie_list.html", movies=movies)
+    existing_rating = (Rating.query.filter(Rating.movie_id == movie_id,
+                                          Rating.user_id == user_id)
+                                   .first())
+    if existing_rating:
+        flash('You have successfully updated your rating!')
+        existing_rating.score = int(rating)
+    else:
+        new_rating = Rating(movie_id=movie_id, 
+                            user_id=user_id, score=rating)
+        db.session.add(new_rating)
+        flash('You have successfully added a new rating!')
+    db.session.commit()  
 
-
-
+    return redirect('movies/' + str(movie_id))
 
 
 @app.route("/movies/<movie_id>")
@@ -79,16 +91,11 @@ def movie_details(movie_id):
     """Show movie details."""
 
     movie = Movie.query.filter(Movie.movie_id == movie_id).one()
-  
-    title = movie.title
-    scores = movie.ratings
+
     
 
     return render_template("movie_details.html", 
-                                    title=title,
-                                    scores=scores
-                                    )   
-
+                                    movie=movie) 
 
 
 
